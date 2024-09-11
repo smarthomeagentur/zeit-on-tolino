@@ -44,6 +44,15 @@ def _login(webdriver: WebDriver) -> None:
 
     username, password, partner_shop = _get_credentials()
     shop = getattr(PartnerDetails, partner_shop.lower()).value
+
+    webdriver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
+    "source": """
+        Object.defineProperty(navigator, 'webdriver', {
+            get: () => undefined
+        })
+    """
+    })
+    
     webdriver.get(TOLINO_CLOUD_LOGIN_URL)
 
     # select country
@@ -146,11 +155,11 @@ def _upload(webdriver: WebDriver, file_path: Path, e_paper_title: str) -> None:
 
     # wait for upload status field to appear
     log.info("waiting for upload status bar to appear...")
-    WebDriverWait(webdriver, Delay.medium).until(EC.presence_of_element_located((By.CLASS_NAME, "_ymr9b9")))
+    WebDriverWait(webdriver, Delay.medium).until(EC.presence_of_element_located((By.CLASS_NAME, "_sep8tp")))
     log.info("upload status bar appeared.")
     # wait for upload status field to disappear
     log.info("waiting for upload status bar to disappear...")
-    upload_status_bar = webdriver.find_element(By.CLASS_NAME, "_ymr9b9")
+    upload_status_bar = webdriver.find_element(By.CLASS_NAME, "_sep8tp")
     WebDriverWait(webdriver, Delay.xlarge).until(EC.staleness_of(upload_status_bar))
     log.info("upload status bar disappeared.")
     time.sleep(Delay.medium)

@@ -1,6 +1,9 @@
 import logging
 
 from zeit_on_tolino import env_vars, epub, tolino, web, zeit
+from dotenv import load_dotenv
+
+load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
